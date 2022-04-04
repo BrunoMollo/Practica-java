@@ -1,40 +1,55 @@
 package Ej_5;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
-public class EmpleadoFactory {
 
-	static public Empleado createEmpleado(Scanner sc) {
+public class EmpleadoFactory {
+	
+	Scanner sc;
+	
+	
+	String inputString(String nombre_dato) {
+		System.out.print("Ingresar "+nombre_dato+": ");
+		return this.sc.nextLine();
+	}
+	
+	
+	float inputFloat(String nombre_dato) {
+		return Float.parseFloat(inputString(nombre_dato));
+	}
+	
+	//----------------------------------------------------------------------------------------------------
+	
+	
+	public EmpleadoFactory(InputStream stream) {
+		this.sc = new Scanner(stream);
+	}
+	
+	public void close() {
+		this.sc.close();
+	}
+	
+	public Empleado createEmpleado() {
 		
-		System.out.print("Tipo de empleado[A/V]: ");
-		String tipoEmpleado =sc.nextLine();
+		String tipoEmpleado=inputString("Tipo de empleado[A/V]");
 		
-		System.out.print("Ingresar dni: ");
-		String _dni=sc.nextLine();
-		System.out.print("Ingresar nombre: ");
-		String _nombre=sc.nextLine();
-		System.out.print("Ingresar apellido: ");
-		String _apellido=sc.nextLine();
-		System.out.print("Ingresar email: ");
-		String _email=sc.nextLine();
-		System.out.print("Ingresar sueldo base: ");
-		float _sueldoBase=Float.parseFloat(sc.nextLine());
-		
+		String _dni=inputString("dni");
+		String _nombre=inputString("nombre");
+		String _apellido=inputString("apellido");
+		String _email=inputString("email");
+		float _sueldoBase=inputFloat("sueldo base");
 		
 		if(tipoEmpleado.equalsIgnoreCase("A")) {
-			System.out.print("Ingresar hs extra: ");
-			float _hsExtra=Float.parseFloat(sc.nextLine());
-			System.out.print("Ingresar hs mes: ");
-			float _hsMes=Float.parseFloat(sc.nextLine());
+			float _hsExtra=inputFloat("horas extra");
+			float _hsMes=inputFloat("horas mes");
 			
 			return new Administrativo(_dni, _nombre, _apellido, _email, _sueldoBase,_hsExtra , _hsMes);
 		}
 		else if(tipoEmpleado.equalsIgnoreCase("V")) {
-			System.out.print("Ingresar porcentaje de comision: ");
-			float _porcenComision=Float.parseFloat(sc.nextLine());
-			System.out.print("Ingresar total ventas: ");
-			float _totalVentas=Float.parseFloat(sc.nextLine());
-			
+			float _porcenComision=inputFloat("porcentaje comision");
+			float _totalVentas=inputFloat("total ventas");
+					
 			return new Vendedor(_dni, _nombre, _apellido, _email, _sueldoBase, _porcenComision, _totalVentas);
 		}
 		else {
@@ -42,4 +57,13 @@ public class EmpleadoFactory {
 		}
 			
 	}
+	
+	
+	public boolean continuarEnLoop() {
+		System.out.print("¿Desea ingresar otro empleado? [S/N]: ");
+		return (sc.nextLine().equalsIgnoreCase("S")); 	
+	}
+	
+	
+
 }

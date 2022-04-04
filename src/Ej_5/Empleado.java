@@ -7,6 +7,8 @@ public abstract class Empleado {
 	String email;
 	float sueldoBase;
 	
+	//----------------------------------------------------------------------------------------------------
+	
 
 	public Empleado(String dni, String nombre, String apellido, String email, float sueldoBase) {
 		this.dni = dni;
@@ -17,11 +19,10 @@ public abstract class Empleado {
 	}
 	
 	public String getDetalle() {
-		return "-"+dni+", "+nombre+" "+apellido+". Sueldo: $"+this.getSueldo();
+		return "=> "+dni+", "+nombre+" "+apellido+". Sueldo: $"+this.getSueldo();
 	}
 	
 	public abstract float getSueldo();
 
-	
 	
 }

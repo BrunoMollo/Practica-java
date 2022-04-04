@@ -4,6 +4,8 @@ public class Administrativo extends Empleado{
 	
 	float hsExtra;
 	float hsMes;
+	
+	//----------------------------------------------------------------------------------------------------
 
 	
 	public Administrativo(String dni, String nombre, String apellido, String email, float sueldoBase, float hsExtra,
