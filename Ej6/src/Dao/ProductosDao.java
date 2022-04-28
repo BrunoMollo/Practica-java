@@ -1,18 +1,14 @@
 package Dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.LinkedList;
-
-import com.mysql.cj.protocol.Resultset;
-
 import bdManage.Canal;
-import bdManage.Transaction;
+import bdManage.InstantTransaction;
+import bdManage.PreparedTransaction;
 import logic.Product;
+
 
 
 
@@ -41,7 +37,7 @@ public class ProductosDao {
 	}
 	
 	public LinkedList<Product> getAll(){
-		return canal.makeTransaction((Transaction t)->{
+		return canal.executeTransaction((InstantTransaction t)->{
 			
 			LinkedList<Product> arr= new LinkedList<>();
 			t.executeQuery("Select * from product");
@@ -56,11 +52,10 @@ public class ProductosDao {
 	}
 	
 	public Product getOne(Integer id) {
-		return canal.makeTransaction((t)->{
+		return canal.executeTransaction((PreparedTransaction t)->{
 			Product p=null;
 			t.prepareStatement("select * from product where id=?");
-			t.pst.setInt(1, id);//RE VERRR
-			
+			t.getStatement().setInt(1, id);
 			
 			t.executePreparedQuery();
 			
@@ -68,6 +63,18 @@ public class ProductosDao {
 				p=mapResulSetToProduct(t.getResultSet());
 			}
 			return p;
+		});
+	}
+	
+	public Product save(Product p) {
+		return canal.executeTransaction((PreparedTransaction t)->{
+			t.prepareStatement("NSERT INTO table_name (name,description,price,stock,shippingIncluded) VALUES (?,?,?,?,?)");
+			t.getStatement().setString("name", );
+			t.getStatement().setDouble("description", 0)
+			t.getStatement().setInt(0, 0);
+			t.getStatement().setBoolean(0, false);
+			
+			return null;
 		});
 	}
 	

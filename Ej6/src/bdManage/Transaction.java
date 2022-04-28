@@ -2,43 +2,35 @@ package bdManage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-public class Transaction {
-	Connection con;
-	Statement st;
-	public PreparedStatement pst;
-	ResultSet rs;
+
+public abstract class Transaction {
+	private Connection con;
+	private ResultSet rs;
 	
 	public Transaction(String url,String user,String psw)throws SQLException{
 		con=DriverManager.getConnection(url,user,psw);
 	}
 	
 	public void close() throws SQLException{
-		if(st!=null) {st.close();}
-		if(pst!=null) {pst.close();}
 		if(rs!=null) {rs.close();}
 		con.close();
 	}
 	
-	public void prepareStatement(String querry)throws SQLException {
-		pst=con.prepareStatement(querry);
-	}
-	
-	public void executeQuery(String querry) throws SQLException{
-			st=con.createStatement();
-			rs=st.executeQuery(querry);
-	}
-	
-	public void executePreparedQuery()throws SQLException {
-		rs=pst.executeQuery();
-	}
 	
 	public ResultSet getResultSet() {
 		return rs;
 	}
+	protected Connection getCon() {
+		return con;
+	}
+	
+	protected void setResultSet(ResultSet newRs) {
+		this.rs=newRs;
+	}
+	
+	
 	
 }
