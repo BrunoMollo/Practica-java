@@ -1,13 +1,14 @@
 package bdManage;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class InstantTransaction extends Transaction{
 	private Statement st;
 	
-	public InstantTransaction(String url, String user, String psw) throws SQLException {
-		super(url, user, psw);
+	public InstantTransaction(Connection _con) {
+		super(_con);
 	}
 
 	@Override

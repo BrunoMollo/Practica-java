@@ -7,14 +7,23 @@ import logic.Product;
 public class Principal6 {
 	public static void main(String[] args) {
 		
-		ProductosDao dbc=new ProductosDao("com.mysql.cj.jdbc.Driver");
-
-		System.out.println(dbc.getOne(2));
-		System.out.println(dbc.getOne(20));
-		System.out.println(dbc.getOne(3));
+		Product p=new Product();
+		p.setId(70);
+		p.setName("tvCambiado");
+		p.setDescripcion("nuevo y cambiado");
+		p.setPrice(14.5);
+		p.setStock(20);
+		p.setShippingIncluded(true);
 		
-		for(Product p: dbc.getAll()) {
-			System.out.println(p);
+		
+		
+		ProductosDao pDao=new ProductosDao();
+		
+		pDao.update(p);
+
+		
+		for(Product pro: pDao.getAll()) {
+			System.out.println(pro);
 		}
 		
 	}
