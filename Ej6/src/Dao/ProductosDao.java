@@ -46,7 +46,7 @@ public class ProductosDao {
 		});
 	}
 	
-	public Product save(Product p) {
+	public Product add(Product p) {
 		return canal.executeTransaction((PreparedTransaction t)->{
 			t.prepareStatement("INSERT INTO product (name,description,price,stock,shippingIncluded) VALUES (?,?,?,?,?)", 
 					PreparedStatement.RETURN_GENERATED_KEYS);

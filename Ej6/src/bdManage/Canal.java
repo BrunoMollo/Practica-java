@@ -26,7 +26,7 @@ public class Canal {
 	
 	private Canal() {
 		try { Class.forName(driver); }
-		catch (ClassNotFoundException e) { e.printStackTrace(); }
+		catch (ClassNotFoundException e) { Logger.log(e); }
 	}
 	
 	public Connection getConection(){
@@ -35,14 +35,17 @@ public class Canal {
 				con=DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, password);
 				conectados=0;
 			}
-		} catch (SQLException ex) { log(ex); }
+		} catch (SQLException ex) { Logger.log(ex); }
 		conectados++;
 		return con;
 	}
 	
-	public void releaseConection() throws SQLException{
+	public void releaseConection(){
 		conectados--;
-		if(conectados==0) { con.close(); }
+		if(conectados==0) { 
+			try { con.close(); } 
+			catch (SQLException ex) { Logger.log(ex);}
+		}
 	}
 
 	
@@ -61,24 +64,15 @@ public class Canal {
 	
 	private <T_OUT, TIPO_TRANS extends Transaction> T_OUT processTransaction(TIPO_TRANS tr, FailableFunction<TIPO_TRANS, T_OUT> func) {
 		try {
-			
 			T_OUT output=func.apply(tr);
-			
-			releaseConection();
+			return output;		
+		} 
+		catch (SQLException ex) { Logger.log(ex); }
+		finally {
 			tr.close();
-			
-			return output;
-				
-		} catch (SQLException ex) { log(ex); }
-		
+			releaseConection();
+		}
 		return null;
 	}
 	
-	
-	private void log(SQLException ex) {//Todo esto no se que es, lo copie nomas
-		System.out.println("SQLException: " + ex.getMessage());
-	    System.out.println("SQLState: " + ex.getSQLState());
-	    System.out.println("VendorError: " + ex.getErrorCode());
-	}
-
 }

@@ -56,4 +56,13 @@ public class Product {
 		return "["+id+"-"+name+"-"+descripcion+"-$"+price+"-stock:"+stock+"-"+((shippingIncluded)?"Incluye envio":"NO incluye envio")+"]";
 	}
 	
+	public String toCard() {
+		return 	"\t|id: "+id+
+				"\n\t|name: "+name+
+				"\n\t|desc: "+descripcion+
+				"\n\t|price: "+price+
+				"\n\t|stock: "+stock+
+				"\n\t|Incluye envio: "+((shippingIncluded)?"SI":"NO")+"\n";		
+	}
+	
 }

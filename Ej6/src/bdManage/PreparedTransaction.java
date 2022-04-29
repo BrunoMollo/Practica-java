@@ -8,14 +8,15 @@ public class PreparedTransaction extends Transaction{
 	private PreparedStatement pst;
 	private int generatedKeyOption;
 	
-	public PreparedTransaction(Connection _con) {
-		super(_con);
-	}
+	public PreparedTransaction(Connection _con) { super(_con); }
 	
 	@Override
-	public void close() throws SQLException{
-		if(pst!=null) {pst.close();}
-		super.close();
+	public void close(){
+		try {
+			if(pst!=null) {pst.close();}
+			if(this.getResultSet()!=null) {this.getResultSet().close();}
+		} 
+		catch (SQLException e) { Logger.log(e); }
 	}
 	
 
@@ -42,8 +43,6 @@ public class PreparedTransaction extends Transaction{
 	}
 	
 	
-	public PreparedStatement getStatement(){
-		return pst;
-	}
+	public PreparedStatement getStatement(){ return pst; }
 
 }
