@@ -50,36 +50,66 @@ public class Opcion {
 		try { 
 			pDao.add(p); 
 			if(p.getId()!=null) { System.out.println("\nSe dio de alta: \n"+p); } //que pasa si esto lo bajo del try??
-			else {System.out.println("No se pudo dar de alta");}				//	Es necesario este control????
+			else {System.out.println("No se pudo dar de alta");}				//	Este control es necesario????
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 		
 	}
 
 
+	public static void eliminarProducto(Scanner sc, ProductosDao pDao) {
+		System.out.print("\nELIMINACION DE PRODUCTO\n"+
+				"Ingresar id: ");
+		
+		Product p=new Product();
+		p.setId(Integer.parseInt(sc.nextLine()));
+		
+		try { pDao.getOne(p); }
+		catch (SQLException e) { e.printStackTrace(); }
+		
+		if(!p.esNull()) {
+			System.out.print(p.toCard()+"\n¿Seguro que quiere borrar este producto?[S/N]: ");
+			if(sc.nextLine().equalsIgnoreCase("S")) {
+				try {
+					pDao.delete(p);
+					System.out.println("Producto borrado");
+				} 
+				catch (SQLException e) { e.printStackTrace(); }	
+			}
+		}
+		else {
+			System.out.println("No se ha encontrado el producto con id "+p.getId());
+		}
+		
+		
 	
-//	public static void modificarProducto(Scanner sc, ProductosDao pDao) {
-//		System.out.print("\nMODIFICACION DE PRODUCTO\n"+
-//				"Ingresar id: ");
-//
-//		int id=Integer.parseInt(sc.nextLine());
-//		Product pTarget=pDao.getOne(id);
-//		
-//		if(pTarget==null) {System.out.println("NO exite ningun producto con la id indicada"); return;}
-//			
-//		System.out.println("\nProducto a modificar: \n"+pTarget.toCard());
-//		cargar(sc, pTarget);
-//		System.out.println("\n Registros modificados: "+pDao.update(pTarget));
-//	}
+	}
 
-//	public static void eliminarProducto(Scanner sc, ProductosDao pDao) {
-//		System.out.print("\nELIMINACION DE PRODUCTO\n"+
-//				"Ingresar id: ");
-//		
-//		int id=Integer.parseInt(sc.nextLine());
-//		System.out.println("\nRegistros eliminados: "+pDao.delete(id));		
-//	}
-//
+
+	
+	public static void modificarProducto(Scanner sc, ProductosDao pDao) {
+		System.out.print("\nMODIFICACION DE PRODUCTO\n"+
+				"Ingresar id: ");
+
+		Product p=new Product();
+		p.setId(Integer.parseInt(sc.nextLine()));
+		
+		try { pDao.getOne(p); }
+		catch (SQLException e) { e.printStackTrace(); }	
+		
+		if(!p.esNull()){
+			System.out.println("\nProducto a modificar: \n"+p.toCard());
+			cargar(sc, p);
+			try { pDao.update(p); }
+			catch (SQLException e) { e.printStackTrace(); }	
+			System.out.println("\nSe modifico el registro");
+		} 
+		else{
+			System.out.println("NO exite ningun producto con la id indicada");
+		}
+			
+	}
+
 
 
 
@@ -109,7 +139,6 @@ public class Opcion {
 		System.out.print("\t|Envio incluido: ");
 		input=sc.nextLine();
 		if(input!="") { p.setShippingIncluded(Boolean.parseBoolean(input)); }
-		
-		p.marcarComoCargado();;
+
 	}
 }

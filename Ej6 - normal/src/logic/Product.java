@@ -4,13 +4,14 @@ public class Product {
 	private Integer id;
 	private String name;
 	private String descripcion;
-	private double price;
+	private Double price;
 	private Integer stock;
-	private boolean shippingIncluded;
-	private boolean esNull=true;
+	private Boolean shippingIncluded;
 	
-	public void marcarComoCargado() { esNull=false; }
-	public  boolean esNull() {return esNull;}
+	
+	public  boolean esNull() {
+		return (id==null) || (name==null) || (descripcion==null) || (price==null) || (stock==null) || (shippingIncluded==null);
+	}
 	
 	
 	public Integer getId() {

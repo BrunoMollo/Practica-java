@@ -48,10 +48,10 @@ public class Principal6 {
 				Opcion.AgregarNuevoProducto(sc,pDao);
 				break;
 			case 4:
-				//eliminarProducto();
+				Opcion.eliminarProducto(sc, pDao);
 				break;
 			case 5:
-				//modificarProducto();
+				Opcion.modificarProducto(sc, pDao);
 				break;
 			case 0:
 				sc.close();

@@ -23,6 +23,7 @@ public class ProductosDao {
 		this.canal=Canal.getCanal();
 	}
 	
+	
 	public LinkedList<Product> getAll() throws SQLException{
 		LinkedList<Product> arr=new LinkedList<Product>();
 		try {
@@ -41,7 +42,6 @@ public class ProductosDao {
 		finally { closeResourses(); }
 		
 	}
-	
 	
 	
 	public Product getOne(Product p) throws SQLException {
@@ -88,14 +88,39 @@ public class ProductosDao {
 		finally { closeResourses(); }
 	}
 	
-//	public int delete(int targetId) {
-//		
-//		
-//	}
-//	
-//	public int update(Product p) {
-//	
-//	}
+	
+	public void delete(Product p) throws SQLException {
+		try {
+			Connection con=canal.getConection();
+			prst=con.prepareStatement("delete from product where id=?");
+			prst.setInt(1, p.getId());
+			
+			prst.executeUpdate(); //podria devolver la cantidad de registros modificados??? porfa
+		} 
+		catch (SQLException ex) { throw ex; }
+		finally { closeResourses(); }
+			
+	}
+	
+	
+	public void update(Product p) throws SQLException {
+		try {
+			Connection con=canal.getConection();
+			
+			prst=con.prepareStatement("Update product set name=?, description=?, price=?, stock=?, shippingIncluded=? where id=?");
+			prst.setString(1, p.getName());
+			prst.setString(2, p.getDescripcion());
+			prst.setDouble(3, p.getPrice());
+			prst.setInt(4, p.getStock());
+			prst.setBoolean(5, p.isShippingIncluded());
+			
+			prst.setInt(6, p.getId()); 
+			
+			prst.executeUpdate(); //podria devolver la cantidad de registros modificados??? porfa
+		} 
+		catch (SQLException ex) { throw ex; }
+		finally { closeResourses(); }
+	}
 	
 //----------------------------------------------------------------------------------------
 	
@@ -106,6 +131,7 @@ public class ProductosDao {
 		if(rs!=null) { rs.close(); }
 	}
 	
+	
 	private Product mapResulSetToProduct(Product p) throws SQLException {
 			p.setId(rs.getInt("id"));
 			p.setName(rs.getString("name"));
@@ -114,7 +140,6 @@ public class ProductosDao {
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
 			
-			p.marcarComoCargado();
 		return p;
 	}
 	
