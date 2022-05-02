@@ -1,108 +1,120 @@
 package Dao;
 
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import bdManage.Canal;
-import bdManage.InstantTransaction;
-import bdManage.PreparedTransaction;
 import logic.Product;
 
 
 public class ProductosDao {
 	
 	private Canal canal;
+	private Statement st;
+	private PreparedStatement prst;
+	private ResultSet rs;
 	
-	public ProductosDao(){
+	
+	public ProductosDao() throws ClassNotFoundException{
 		this.canal=Canal.getCanal();
 	}
 	
-	public LinkedList<Product> getAll(){
-		return canal.executeInstantTransaction((InstantTransaction t)->{
-			LinkedList<Product> arr= new LinkedList<>();
-			t.executeQuery("Select * from product");
-			while(t.getResultSet().next()) {
-				Product p=mapResulSetToProduct(t.getResultSet());
+	public LinkedList<Product> getAll() throws SQLException{
+		LinkedList<Product> arr=new LinkedList<Product>();
+		try {
+			Connection con =canal.getConection();
+			st=con.createStatement();
+			rs=st.executeQuery("Select * from product");
+			
+			while(rs.next()) {
+				Product p=new Product();
+				mapResulSetToProduct(p);
 				arr.add(p);
 			}
 			return arr;
-		});
-	}
-	
-	
-	
-	public Product getOne(Integer id) {
-		return canal.executeTransaction((PreparedTransaction t)->{
-			Product p=null;
-			t.prepareStatement("select * from product where id=?");
-			t.getStatement().setInt(1, id);
-			t.executePreparedQuery();
-			if(t.getResultSet().next()) {
-				p=mapResulSetToProduct(t.getResultSet());
-			}
-			return p;
-		});
-	}
-	
-	public Product add(Product p) {
-		return canal.executeTransaction((PreparedTransaction t)->{
-			t.prepareStatement("INSERT INTO product (name,description,price,stock,shippingIncluded) VALUES (?,?,?,?,?)", 
-					PreparedStatement.RETURN_GENERATED_KEYS);
-			
-			t.getStatement().setString(1, p.getName());
-			t.getStatement().setString(2, p.getDescripcion());
-			t.getStatement().setDouble(3, p.getPrice());
-			t.getStatement().setInt(4, p.getStock());
-			t.getStatement().setBoolean(5, p.isShippingIncluded());
-			
-			t.executeUpdate();
-			
-			if(t.getResultSet()!=null && t.getResultSet().next()) {
-				p.setId(t.getResultSet().getInt(1));
-			}
-			
-			return p;
-		});
-	}
-	
-	public int delete(int targetId) {
-		return canal.executeTransaction((PreparedTransaction t)->{
-			t.prepareStatement("Delete from product where id=?");
-			t.getStatement().setInt(1, targetId);
-			return t.executeUpdate();
-		});
+		} 
+		catch (SQLException ex) { throw ex; }
+		finally { closeResourses(); }
 		
 	}
 	
-	public int update(Product p) {
-		return canal.executeTransaction((PreparedTransaction t) -> {
+	
+	
+	public Product getOne(Product p) throws SQLException {
+		try {
+			Connection con=canal.getConection();
+			prst=con.prepareStatement("Select * from product where id=?");
+			prst.setInt(1, p.getId());
 			
-			t.prepareStatement("Update product set name=?, description=?, price=?, stock=?, shippingIncluded=? where id=?");
+			rs=prst.executeQuery();
+			if(rs.next()) {
+				mapResulSetToProduct(p);
+			}
+			return p;
 			
-			t.getStatement().setString(1, p.getName());
-			t.getStatement().setString(2, p.getDescripcion());
-			t.getStatement().setDouble(3, p.getPrice());
-			t.getStatement().setInt(4, p.getStock());
-			t.getStatement().setBoolean(5, p.isShippingIncluded());
-			
-			t.getStatement().setInt(6, p.getId());
-			
-			return t.executeUpdate();
-		});
+		} 
+		catch (SQLException ex) { throw ex; }
+		finally { closeResourses(); }
+		
 	}
+	
+	
+	public Product add(Product p) throws SQLException {
+		try {
+			Connection con=canal.getConection();
+			prst=con.prepareStatement("INSERT INTO product (name,description,price,stock,shippingIncluded) VALUES (?,?,?,?,?)", 
+					PreparedStatement.RETURN_GENERATED_KEYS);
+			
+			prst.setString(2, p.getDescripcion());
+			prst.setString(1, p.getName());
+			prst.setDouble(3, p.getPrice());
+			prst.setInt(4, p.getStock());
+			prst.setBoolean(5, p.isShippingIncluded());
+			
+			prst.executeUpdate();
+			
+			rs=prst.getGeneratedKeys();
+			if(rs.next()) {
+				p.setId(rs.getInt(1));
+			}
+			
+			return p;
+		} 
+		catch (SQLException ex) { throw ex; }
+		finally { closeResourses(); }
+	}
+	
+//	public int delete(int targetId) {
+//		
+//		
+//	}
+//	
+//	public int update(Product p) {
+//	
+//	}
 	
 //----------------------------------------------------------------------------------------
 	
-	private Product mapResulSetToProduct(ResultSet rs) throws SQLException {
-		Product p=new Product();
+	private void closeResourses() throws SQLException {
+		canal.releaseConection();
+		if(prst!=null) { prst.close(); }
+		if(st!=null) { st.close(); }
+		if(rs!=null) { rs.close(); }
+	}
+	
+	private Product mapResulSetToProduct(Product p) throws SQLException {
 			p.setId(rs.getInt("id"));
 			p.setName(rs.getString("name"));
 			p.setDescripcion(rs.getString("description"));
 			p.setPrice(rs.getDouble("price"));
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
+			
+			p.marcarComoCargado();
 		return p;
 	}
 	

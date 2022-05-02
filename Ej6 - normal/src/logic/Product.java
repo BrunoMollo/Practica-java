@@ -1,12 +1,17 @@
 package logic;
 
 public class Product {
-	Integer id;
-	String name;
-	String descripcion;
-	double price;
-	Integer stock;
-	boolean shippingIncluded;
+	private Integer id;
+	private String name;
+	private String descripcion;
+	private double price;
+	private Integer stock;
+	private boolean shippingIncluded;
+	private boolean esNull=true;
+	
+	public void marcarComoCargado() { esNull=false; }
+	public  boolean esNull() {return esNull;}
+	
 	
 	public Integer getId() {
 		return id;

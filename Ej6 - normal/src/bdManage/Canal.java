@@ -19,60 +19,25 @@ public class Canal {
 	private static Canal instancia;
 	
 	
-	static public Canal getCanal() {
+	static public Canal getCanal() throws ClassNotFoundException {
 		if(instancia==null) { instancia=new Canal(); }
 		return instancia;
 	}
 	
-	private Canal() {
-		try { Class.forName(driver); }
-		catch (ClassNotFoundException e) { Logger.log(e); }
-	}
+	private Canal() throws ClassNotFoundException { Class.forName(driver); }
 	
-	public Connection getConection(){
-		try {
+	public Connection getConection() throws SQLException {
 			if(con==null || con.isClosed()) {
 				con=DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, password);
 				conectados=0;
 			}
-		} catch (SQLException ex) { Logger.log(ex); }
 		conectados++;
 		return con;
 	}
 	
-	public void releaseConection(){
+	public void releaseConection() throws SQLException{
 		conectados--;
-		if(conectados==0) { 
-			try { con.close(); } 
-			catch (SQLException ex) { Logger.log(ex);}
-		}
-	}
-
-	
-	public <T_OUT> T_OUT executeTransaction(FailableFunction<PreparedTransaction,T_OUT> func){
-		PreparedTransaction tr=new PreparedTransaction(getConection());
-		return processTransaction(tr, func);
-	}
-	
-	public <T_OUT> T_OUT executeInstantTransaction(FailableFunction<InstantTransaction,T_OUT> func){
-		InstantTransaction tr=new InstantTransaction(getConection());
-			return processTransaction(tr, func);
-		}
-	
-	
-	//----------------------
-	
-	private <T_OUT, TIPO_TRANS extends Transaction> T_OUT processTransaction(TIPO_TRANS tr, FailableFunction<TIPO_TRANS, T_OUT> func) {
-		try {
-			T_OUT output=func.apply(tr);
-			return output;		
-		} 
-		catch (SQLException ex) { Logger.log(ex); }
-		finally {
-			tr.close();
-			releaseConection();
-		}
-		return null;
+		if(conectados==0) { con.close(); }
 	}
 	
 }
