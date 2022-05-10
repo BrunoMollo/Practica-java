@@ -53,9 +53,10 @@ public class ProductosDao {
 			rs=prst.executeQuery();
 			if(rs.next()) {
 				mapResulSetToProduct(p);
+				return p;
 			}
-			return p;
-			
+			else { return null; }
+				
 		} 
 		catch (SQLException ex) { throw ex; }
 		finally { closeResourses(); }
@@ -95,7 +96,11 @@ public class ProductosDao {
 			prst=con.prepareStatement("delete from product where id=?");
 			prst.setInt(1, p.getId());
 			
-			prst.executeUpdate(); //podria devolver la cantidad de registros modificados??? porfa
+			int modifiedRows=prst.executeUpdate();
+			
+			if(modifiedRows==0) {
+				//tira appExeption
+			}
 		} 
 		catch (SQLException ex) { throw ex; }
 		finally { closeResourses(); }
@@ -116,7 +121,11 @@ public class ProductosDao {
 			
 			prst.setInt(6, p.getId()); 
 			
-			prst.executeUpdate(); //podria devolver la cantidad de registros modificados??? porfa
+			int modifiedRows=prst.executeUpdate();
+			
+			if(modifiedRows==0) {
+				//tira appExeption
+			}
 		} 
 		catch (SQLException ex) { throw ex; }
 		finally { closeResourses(); }

@@ -29,16 +29,17 @@ public class Opcion {
 						 "Ingresar id: ");
 		
 		Product p=new Product();
-		p.setId(Integer.parseInt(sc.nextLine()));
+		Integer idTarget=Integer.parseInt(sc.nextLine());
+		p.setId(idTarget);
 		
-		try { pDao.getOne(p); }
+		try { p=pDao.getOne(p); }
 		catch (SQLException e) { e.printStackTrace(); }	
 		
-		if(!p.esNull()) {
+		if(p!=null) {
 			System.out.println("\nProducto buscado: \n"+p.toCard());
 		}
 		else {
-			System.out.println("No se ha encontrado el producto con id "+p.getId());
+			System.out.println("No se ha encontrado el producto con id "+idTarget);
 		}
 	}
 	
@@ -49,8 +50,8 @@ public class Opcion {
 		
 		try { 
 			pDao.add(p); 
-			if(p.getId()!=null) { System.out.println("\nSe dio de alta: \n"+p); } //que pasa si esto lo bajo del try??
-			else {System.out.println("No se pudo dar de alta");}				//	Este control es necesario????
+			if(p.getId()!=null) { System.out.println("\nSe dio de alta: \n"+p); } 
+			else {System.out.println("No se pudo dar de alta");}				
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 		
