@@ -67,14 +67,15 @@ public class ProductosDao {
 	public Product add(Product p) throws SQLException {
 		try {
 			Connection con=canal.getConection();
-			prst=con.prepareStatement("INSERT INTO product (name,description,price,stock,shippingIncluded) VALUES (?,?,?,?,?)", 
+			prst=con.prepareStatement("INSERT INTO product (name,description,price,stock,shippingIncluded,disableOn) VALUES (?,?,?,?,?,?)", 
 					PreparedStatement.RETURN_GENERATED_KEYS);
 			
-			prst.setString(2, p.getDescripcion());
 			prst.setString(1, p.getName());
+			prst.setString(2, p.getDescripcion());
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
+			prst.setDate(6, p.getDisableOn());
 			
 			prst.executeUpdate();
 			
@@ -112,14 +113,24 @@ public class ProductosDao {
 		try {
 			Connection con=canal.getConection();
 			
-			prst=con.prepareStatement("Update product set name=?, description=?, price=?, stock=?, shippingIncluded=? where id=?");
+			prst=con.prepareStatement("Update product set "
+					+ "name=?,"
+					+ " description=?,"
+					+ " price=?,"
+					+ " stock=?,"
+					+ " shippingIncluded=?,"
+					+ " disableOn=?"
+					
+					+ " where id=?");
+			
 			prst.setString(1, p.getName());
 			prst.setString(2, p.getDescripcion());
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
+			prst.setDate(6, p.getDisableOn());
 			
-			prst.setInt(6, p.getId()); 
+			prst.setInt(7, p.getId()); 
 			
 			int modifiedRows=prst.executeUpdate();
 			
@@ -148,6 +159,7 @@ public class ProductosDao {
 			p.setPrice(rs.getDouble("price"));
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
+			p.setDisableOn(rs.getDate("disableOn"));
 			
 		return p;
 	}

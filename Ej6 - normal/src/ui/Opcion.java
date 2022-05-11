@@ -1,6 +1,7 @@
 package ui;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -17,8 +18,13 @@ public class Opcion {
 		try { arr = pDao.getAll(); } 
 		catch (SQLException e) { e.printStackTrace(); }
 		
-		for(Product pro: arr) {
-			System.out.println(pro);
+		
+		System.out.format("|%3s|%10s|%35s|$%7s|%7s|%5s|%15s|\n", "ID","NOMBRE", "DESCRIPCION", "PRECIO", "STOCK", "ENVIO", "DESAHILITACION");
+			
+		
+		for(Product p: arr) {
+			System.out.format("|%3d|%10s|%35s|$%7.2f|%7d|%5s|%15s|\n", 
+					p.getId(),p.getName(), p.getDescripcion(), p.getPrice(), p.getStock(), p.isShippingIncluded(), p.printDisableOn());
 			}
 	}
 	
@@ -36,7 +42,7 @@ public class Opcion {
 		catch (SQLException e) { e.printStackTrace(); }	
 		
 		if(p!=null) {
-			System.out.println("\nProducto buscado: \n"+p.toCard());
+			System.out.println("\nProducto buscado: \n"+p);
 		}
 		else {
 			System.out.println("No se ha encontrado el producto con id "+idTarget);
@@ -63,12 +69,13 @@ public class Opcion {
 				"Ingresar id: ");
 		
 		Product p=new Product();
-		p.setId(Integer.parseInt(sc.nextLine()));
+		int idTarget=Integer.parseInt(sc.nextLine());
+		p.setId(idTarget);
 		
 		try { 
 			p=pDao.getOne(p); 
 			if(p!=null) {
-				System.out.print(p.toCard()+"\n¿Seguro que quiere borrar este producto?[S/N]: ");
+				System.out.print(p+"\n¿Seguro que quiere borrar este producto?[S/N]: ");
 				if(sc.nextLine().equalsIgnoreCase("S")) {
 					try {
 						pDao.delete(p);
@@ -78,7 +85,7 @@ public class Opcion {
 				}
 			}
 			else {
-				System.out.println("No se ha encontrado el producto con id "+p.getId());
+				System.out.println("No se ha encontrado el producto con id "+idTarget);
 			}
 			
 			
@@ -98,7 +105,7 @@ public class Opcion {
 		try { 
 			p=pDao.getOne(p); 
 			if(p!=null) {
-				System.out.println("\nProducto a modificar: \n"+p.toCard());
+				System.out.println("\nProducto a modificar: \n"+p);
 				
 				cargar(sc, p);
 				pDao.update(p);
@@ -140,6 +147,20 @@ public class Opcion {
 		System.out.print("\t|Envio incluido: ");
 		input=sc.nextLine();
 		if(input!="") { p.setShippingIncluded(Boolean.parseBoolean(input)); }
+		
+		System.out.print("\t|Fecha deshabilitacion ("+Global.esquemaFormatoFecha+"): ");
+		input=sc.nextLine();
+	
+		try {
+			
+			if(input!="") { 
+				java.util.Date fechaUtil=Global.formatoFecha.parse(input);
+				java.sql.Date fechaSql=new java.sql.Date(fechaUtil.getTime());
+				p.setDisableOn(fechaSql); 
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 	}
 }

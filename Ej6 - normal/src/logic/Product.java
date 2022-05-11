@@ -1,5 +1,8 @@
 package logic;
 
+import ui.Global;
+
+
 public class Product {
 	private Integer id;
 	private String name;
@@ -7,7 +10,7 @@ public class Product {
 	private Double price;
 	private Integer stock;
 	private Boolean shippingIncluded;
-	
+	private java.sql.Date disableOn;
 	
 	
 	public Integer getId() {
@@ -52,19 +55,29 @@ public class Product {
 		this.shippingIncluded = shippingIncluded;
 	}
 	
+	public java.sql.Date getDisableOn() {
+		return disableOn;
+	}
+	public void setDisableOn(java.sql.Date disableOn) {
+		this.disableOn = disableOn;
+	}
+	
+	
+	public String printDisableOn(){
+		if(disableOn==null) { return "<vacio>"; }
+		return Global.formatoFecha.format(disableOn);
+	}
 	
 	@Override
 	public String toString() {
-		return "["+id+"-"+name+"-"+descripcion+"-$"+price+"-stock:"+stock+"-"+((shippingIncluded)?"Incluye envio":"NO incluye envio")+"]";
-	}
-	
-	public String toCard() {
 		return 	"\t|id: "+id+
 				"\n\t|name: "+name+
 				"\n\t|desc: "+descripcion+
 				"\n\t|price: "+price+
 				"\n\t|stock: "+stock+
-				"\n\t|Incluye envio: "+((shippingIncluded)?"SI":"NO")+"\n";		
+				"\n\t|Incluye envio: "+((shippingIncluded)?"SI":"NO")+
+				"\n\t|Fecha de deshabilitacion: "+printDisableOn()+"\n";	
 	}
+	
 	
 }
