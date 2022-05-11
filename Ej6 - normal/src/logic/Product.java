@@ -9,10 +9,6 @@ public class Product {
 	private Boolean shippingIncluded;
 	
 	
-	public  boolean esNull() {
-		return (id==null) || (name==null) || (descripcion==null) || (price==null) || (stock==null) || (shippingIncluded==null);
-	}
-	
 	
 	public Integer getId() {
 		return id;

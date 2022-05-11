@@ -65,25 +65,25 @@ public class Opcion {
 		Product p=new Product();
 		p.setId(Integer.parseInt(sc.nextLine()));
 		
-		try { pDao.getOne(p); }
-		catch (SQLException e) { e.printStackTrace(); }
-		
-		if(!p.esNull()) {
-			System.out.print(p.toCard()+"\n¿Seguro que quiere borrar este producto?[S/N]: ");
-			if(sc.nextLine().equalsIgnoreCase("S")) {
-				try {
-					pDao.delete(p);
-					System.out.println("Producto borrado");
-				} 
-				catch (SQLException e) { e.printStackTrace(); }	
+		try { 
+			p=pDao.getOne(p); 
+			if(p!=null) {
+				System.out.print(p.toCard()+"\n¿Seguro que quiere borrar este producto?[S/N]: ");
+				if(sc.nextLine().equalsIgnoreCase("S")) {
+					try {
+						pDao.delete(p);
+						System.out.println("Producto borrado");
+					} 
+					catch (SQLException e) { e.printStackTrace(); }	
+				}
 			}
+			else {
+				System.out.println("No se ha encontrado el producto con id "+p.getId());
+			}
+			
+			
 		}
-		else {
-			System.out.println("No se ha encontrado el producto con id "+p.getId());
-		}
-		
-		
-	
+		catch (SQLException e) { e.printStackTrace(); }
 	}
 
 
@@ -95,26 +95,26 @@ public class Opcion {
 		Product p=new Product();
 		p.setId(Integer.parseInt(sc.nextLine()));
 		
-		try { pDao.getOne(p); }
-		catch (SQLException e) { e.printStackTrace(); }	
-		
-		if(!p.esNull()){
-			System.out.println("\nProducto a modificar: \n"+p.toCard());
-			cargar(sc, p);
-			try { pDao.update(p); }
-			catch (SQLException e) { e.printStackTrace(); }	
-			System.out.println("\nSe modifico el registro");
-		} 
-		else{
-			System.out.println("NO exite ningun producto con la id indicada");
+		try { 
+			p=pDao.getOne(p); 
+			if(p!=null) {
+				System.out.println("\nProducto a modificar: \n"+p.toCard());
+				
+				cargar(sc, p);
+				pDao.update(p);
+				System.out.println("\nSe modifico el registro");
+			}
+			else{
+				System.out.println("NO exite ningun producto con la id indicada");
+			}
 		}
+		catch (SQLException e) { e.printStackTrace(); }	
 			
 	}
 
 
 
 
-	
 	
 	//----------------------------------
 	
