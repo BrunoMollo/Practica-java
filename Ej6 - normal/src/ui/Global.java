@@ -1,9 +1,10 @@
 package ui;
 
-import java.text.SimpleDateFormat;
+
+import java.time.format.DateTimeFormatter;
 
 
 public class Global {
-	public static final String esquemaFormatoFecha="dd/MM/yyyy";
-	public static final SimpleDateFormat formatoFecha=new SimpleDateFormat(esquemaFormatoFecha);
+	public static final String esquemaFormatoFecha="yyyy-MM-dd HH:mm:ss";
+	public static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern(esquemaFormatoFecha);
 }

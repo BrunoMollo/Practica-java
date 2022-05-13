@@ -1,7 +1,7 @@
 package ui;
 
 import java.sql.SQLException;
-import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -151,16 +151,23 @@ public class Opcion {
 		System.out.print("\t|Fecha deshabilitacion ("+Global.esquemaFormatoFecha+"): ");
 		input=sc.nextLine();
 	
-		try {
-			
-			if(input!="") { 
-				java.util.Date fechaUtil=Global.formatoFecha.parse(input);
-				java.sql.Date fechaSql=new java.sql.Date(fechaUtil.getTime());
-				p.setDisableOn(fechaSql); 
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if(input!="") { 
+			//input+="T00:00:00";
+			LocalDateTime dateTime = LocalDateTime.parse(input, Global.formatoFecha);
+			p.setDisableOn(dateTime);
 		}
+		
+
+//		try {
+//			
+//			if(input!="") { 
+//				java.util.Date fechaUtil=Global.formatoFecha.parse(input);
+//				java.sql.Date fechaSql=new java.sql.Date(fechaUtil.getTime());
+//				p.setDisableOn(fechaSql); 
+//			}
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 
 	}
 }

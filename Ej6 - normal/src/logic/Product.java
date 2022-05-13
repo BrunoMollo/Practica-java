@@ -1,5 +1,7 @@
 package logic;
 
+import java.time.LocalDateTime;
+
 import ui.Global;
 
 
@@ -10,7 +12,7 @@ public class Product {
 	private Double price;
 	private Integer stock;
 	private Boolean shippingIncluded;
-	private java.sql.Date disableOn;
+	private LocalDateTime disableOn;
 	
 	
 	public Integer getId() {
@@ -55,17 +57,17 @@ public class Product {
 		this.shippingIncluded = shippingIncluded;
 	}
 	
-	public java.sql.Date getDisableOn() {
+	public LocalDateTime  getDisableOn() {
 		return disableOn;
 	}
-	public void setDisableOn(java.sql.Date disableOn) {
+	public void setDisableOn(LocalDateTime  disableOn) {
 		this.disableOn = disableOn;
 	}
 	
 	
 	public String printDisableOn(){
 		if(disableOn==null) { return "<vacio>"; }
-		return Global.formatoFecha.format(disableOn);
+		return disableOn.format(Global.formatoFecha);
 	}
 	
 	@Override

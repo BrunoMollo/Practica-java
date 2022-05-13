@@ -1,14 +1,18 @@
 package Dao;
 
 
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import bdManage.Canal;
 import logic.Product;
+
 
 
 public class ProductosDao {
@@ -75,8 +79,8 @@ public class ProductosDao {
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
-			prst.setDate(6, p.getDisableOn());
-			
+			prst.setTimestamp(6, Timestamp.valueOf(p.getDisableOn()));
+
 			prst.executeUpdate();
 			
 			rs=prst.getGeneratedKeys();
@@ -128,7 +132,7 @@ public class ProductosDao {
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
-			prst.setDate(6, p.getDisableOn());
+			prst.setTimestamp(6, Timestamp.valueOf(p.getDisableOn()));
 			
 			prst.setInt(7, p.getId()); 
 			
@@ -159,7 +163,12 @@ public class ProductosDao {
 			p.setPrice(rs.getDouble("price"));
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
-			p.setDisableOn(rs.getDate("disableOn"));
+			
+			Timestamp fechaBaja=rs.getTimestamp("disableOn");
+			if(fechaBaja!=null) {
+				p.setDisableOn(fechaBaja.toLocalDateTime());
+			}
+			
 			
 		return p;
 	}
