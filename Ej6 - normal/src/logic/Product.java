@@ -1,6 +1,9 @@
 package logic;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 import ui.Global;
 
@@ -12,7 +15,20 @@ public class Product {
 	private Double price;
 	private Integer stock;
 	private Boolean shippingIncluded;
-	private LocalDateTime disableOn;
+	
+	
+	private LocalDate dateDisableOn;
+	private LocalTime timeDisableOn;
+	private LocalDateTime dateTimeDisabelOn;
+	private ZonedDateTime zonedDateTimeDisableOn;
+	
+	public void setDateTimeDisabelOn(LocalDateTime dt) {
+		if(dt==null) return; 
+		
+		this.dateTimeDisabelOn=dt;
+		this.dateDisableOn=dt.toLocalDate();
+		this.timeDisableOn=dt.toLocalTime();
+	}
 	
 	
 	public Integer getId() {
@@ -57,17 +73,40 @@ public class Product {
 		this.shippingIncluded = shippingIncluded;
 	}
 	
-	public LocalDateTime  getDisableOn() {
-		return disableOn;
+	
+	public LocalDate getDateDisableOn() {
+		return dateDisableOn;
 	}
-	public void setDisableOn(LocalDateTime  disableOn) {
-		this.disableOn = disableOn;
+
+
+	public LocalTime getTimeDisableOn() {
+		return timeDisableOn;
 	}
+
+
+	public LocalDateTime getDateTimeDisabelOn() {
+		return dateTimeDisabelOn;
+	}
+
+
+	public ZonedDateTime getZonedDateTimeDisableOn() {
+		return zonedDateTimeDisableOn;
+	}
+
 	
 	
-	public String printDisableOn(){
-		if(disableOn==null) { return "<vacio>"; }
-		return disableOn.format(Global.formatoFecha);
+	public String printDateDisableOn(){
+		if(dateDisableOn==null) { return " - "; }
+		return dateDisableOn.format(Global.dateFormatter);
+	}
+	
+	public String printTimeDisableOn(){
+		if(timeDisableOn==null) { return " - "; }
+		return timeDisableOn.format(Global.timeFormatter);
+	}
+	
+	public Boolean isDisable() {
+		return (dateTimeDisabelOn!=null);
 	}
 	
 	@Override
@@ -78,7 +117,9 @@ public class Product {
 				"\n\t|price: "+price+
 				"\n\t|stock: "+stock+
 				"\n\t|Incluye envio: "+((shippingIncluded)?"SI":"NO")+
-				"\n\t|Fecha de deshabilitacion: "+printDisableOn()+"\n";	
+				"\n\t|Fecha de deshabilitacion: "+printDateDisableOn()+
+				"\n\t|Hora de deshabilitacion: "+printTimeDisableOn()+"\n";	
+		
 	}
 	
 	

@@ -1,15 +1,14 @@
 package Dao;
 
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.LinkedList;
+
 import bdManage.Canal;
 import logic.Product;
 
@@ -79,7 +78,7 @@ public class ProductosDao {
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
-			prst.setTimestamp(6, Timestamp.valueOf(p.getDisableOn()));
+			prst.setObject(6, p.getDateTimeDisabelOn());
 
 			prst.executeUpdate();
 			
@@ -101,11 +100,7 @@ public class ProductosDao {
 			prst=con.prepareStatement("delete from product where id=?");
 			prst.setInt(1, p.getId());
 			
-			int modifiedRows=prst.executeUpdate();
-			
-			if(modifiedRows==0) {
-				//tira appExeption
-			}
+			prst.executeUpdate();
 		} 
 		catch (SQLException ex) { throw ex; }
 		finally { closeResourses(); }
@@ -132,7 +127,7 @@ public class ProductosDao {
 			prst.setDouble(3, p.getPrice());
 			prst.setInt(4, p.getStock());
 			prst.setBoolean(5, p.isShippingIncluded());
-			prst.setTimestamp(6, Timestamp.valueOf(p.getDisableOn()));
+			prst.setObject(6, p.getDateTimeDisabelOn());;
 			
 			prst.setInt(7, p.getId()); 
 			
@@ -164,11 +159,7 @@ public class ProductosDao {
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
 			
-			Timestamp fechaBaja=rs.getTimestamp("disableOn");
-			if(fechaBaja!=null) {
-				p.setDisableOn(fechaBaja.toLocalDateTime());
-			}
-			
+			p.setDateTimeDisabelOn(rs.getObject("disableOn",LocalDateTime.class));
 			
 		return p;
 	}

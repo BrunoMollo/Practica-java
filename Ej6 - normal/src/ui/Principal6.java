@@ -32,6 +32,7 @@ public class Principal6 {
 					"3.Agregar nuevo Producto\n"+
 					"4.Eliminar producto\n"+
 					"5.Modificar producto\n"+
+					"6.Deshabilitar\n"+
 					"0.Salir\n"+
 					"Opcion: "
 					);
@@ -52,6 +53,9 @@ public class Principal6 {
 				break;
 			case 5:
 				Opcion.modificarProducto(sc, pDao);
+				break;
+			case 6:
+				Opcion.deshabilitarProducto(sc, pDao);
 				break;
 			case 0:
 				sc.close();
