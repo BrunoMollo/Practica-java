@@ -13,10 +13,10 @@ public class Menu {
 
 	public void start() {
 		s = new Scanner(System.in);
-		Persona p=login();
-		
-		System.out.println("Bienvenido "+p.getNombre()+" "+p.getApellido());
-		System.out.println();
+//		Persona p=login();
+//		
+//		System.out.println("Bienvenido "+p.getNombre()+" "+p.getApellido());
+//		System.out.println();
 		
 		String command;
 		do {
@@ -37,8 +37,8 @@ public class Menu {
 		case "find":
 			System.out.println(find());
 			break;
-		case "seach":
-	
+		case "search":
+			System.out.println(findAllBySurname());
 			break;
 		case "new":
 			
@@ -103,7 +103,6 @@ public class Menu {
 		p.setApellido(s.nextLine());
 		
 		return ctrlLogin.getAllBySurname(p);
-			
 	}
 
 }

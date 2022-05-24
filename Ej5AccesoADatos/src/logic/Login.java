@@ -30,6 +30,6 @@ public class Login {
 	}
 	
 	public LinkedList<Persona> getAllBySurname(Persona per){
-		return dp.getAllBySurname();
+		return dp.getAllBySurname(per);
 	}
 }

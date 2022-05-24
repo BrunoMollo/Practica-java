@@ -1,5 +1,5 @@
 package data;
-//orig
+
 import entities.*;
 
 import java.sql.*;
@@ -63,7 +63,7 @@ public class DataPersona {
 	public Persona getByUser(Persona per) {
 		Persona p=null;
 		try {
-			stmt=DbConnector.getInstancia().getConn().prepareStatement(
+			pstmt=DbConnector.getInstancia().getConn().prepareStatement(
 					"select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where email=? and password=?"
 					);
 			pstmt.setString(1, per.getEmail());
@@ -82,7 +82,7 @@ public class DataPersona {
 	public Persona getByDocumento(Persona per) {
 		Persona p=null;
 		try {
-			stmt=DbConnector.getInstancia().getConn().prepareStatement(
+			pstmt=DbConnector.getInstancia().getConn().prepareStatement(
 					"select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where tipo_doc=? and nro_doc=?"
 					);
 			pstmt.setString(1, per.getDocumento().getTipo());
@@ -99,7 +99,7 @@ public class DataPersona {
 				p.setEmail(rs.getString("email"));
 				p.setTel(rs.getString("tel"));
 				p.setHabilitado(rs.getBoolean("habilitado"));
-				//
+				
 				dr.setRoles(p);
 			}
 		} 
@@ -111,7 +111,7 @@ public class DataPersona {
 	
 	public void add(Persona p) {
 		try {
-			stmt=DbConnector.getInstancia().getConn().
+			pstmt=DbConnector.getInstancia().getConn().
 					prepareStatement(
 							"insert into persona(nombre, apellido, tipo_doc, nro_doc, email, password, tel, habilitado) values(?,?,?,?,?,?,?,?)",
 							PreparedStatement.RETURN_GENERATED_KEYS
@@ -135,11 +135,25 @@ public class DataPersona {
 		finally { closeResourses(); }
     }
 
-	public LinkedList<Persona> getAllBySurname() {
-		
+	public LinkedList<Persona> getAllBySurname(Persona p) {
+		LinkedList<Persona> arr= new LinkedList<Persona>();
+		try {
+			pstmt=DbConnector.getInstancia().getConn().prepareStatement(
+					"select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado "
+					+ "from persona "
+					+ "where apellido=?");
+			pstmt.setString(1, p.getApellido());
+			
+			rs=pstmt.executeQuery();
+			while(rs!=null && rs.next()) {
+				arr.add(mapPersonaFromRs());
+			}
+		}
+		catch (SQLException e) { e.printStackTrace(); } 
+		finally { closeResourses(); }
 
 		
-		return null;
+		return arr;
 	}
 
 	
