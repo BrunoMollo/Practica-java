@@ -1,7 +1,6 @@
 package logic;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
@@ -16,18 +15,17 @@ public class Product {
 	private Integer stock;
 	private Boolean shippingIncluded;
 	
-	
 	private LocalDate dateDisableOn;
 	private LocalTime timeDisableOn;
-	private LocalDateTime dateTimeDisabelOn;
-	private ZonedDateTime zonedDateTimeDisableOn;
+	private ZonedDateTime dateTimeDisabelOn;
+
 	
-	public void setDateTimeDisabelOn(LocalDateTime dt) {
-		if(dt==null) return; 
+	public void setDateTimeDisabelOn(ZonedDateTime zonedDateTime) {
+		if(zonedDateTime==null) return; 
 		
-		this.dateTimeDisabelOn=dt;
-		this.dateDisableOn=dt.toLocalDate();
-		this.timeDisableOn=dt.toLocalTime();
+		this.dateTimeDisabelOn=zonedDateTime;
+		this.dateDisableOn=zonedDateTime.withZoneSameInstant(Global.usoHorarioCliente).toLocalDate();
+		this.timeDisableOn=zonedDateTime.withZoneSameInstant(Global.usoHorarioCliente).toLocalTime();
 	}
 	
 	
@@ -84,14 +82,10 @@ public class Product {
 	}
 
 
-	public LocalDateTime getDateTimeDisabelOn() {
+	public ZonedDateTime getDateTimeDisabelOn() {
 		return dateTimeDisabelOn;
 	}
 
-
-	public ZonedDateTime getZonedDateTimeDisableOn() {
-		return zonedDateTimeDisableOn;
-	}
 
 	
 	
@@ -118,7 +112,8 @@ public class Product {
 				"\n\t|stock: "+stock+
 				"\n\t|Incluye envio: "+((shippingIncluded)?"SI":"NO")+
 				"\n\t|Fecha de deshabilitacion: "+printDateDisableOn()+
-				"\n\t|Hora de deshabilitacion: "+printTimeDisableOn()+"\n";	
+				"\n\t|Hora de deshabilitacion: "+printTimeDisableOn()+"\n"
+						+ "fecha y hora: "+dateTimeDisabelOn;	
 		
 	}
 	

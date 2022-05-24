@@ -51,6 +51,7 @@ public class Principal6 {
 			case 4:
 				Opcion.eliminarProducto(sc, pDao);
 				break;
+				
 			case 5:
 				Opcion.modificarProducto(sc, pDao);
 				break;
@@ -59,7 +60,7 @@ public class Principal6 {
 				break;
 			case 0:
 				sc.close();
-				System.out.println("chua");
+				System.out.println("\n nv");
 				break;
 			default: break;
 			}

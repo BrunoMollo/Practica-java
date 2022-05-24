@@ -1,7 +1,7 @@
 package Dao;
 
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -145,6 +145,7 @@ public class ProductosDao {
 	
 	private void closeResourses() throws SQLException {
 		canal.releaseConection();
+		
 		if(prst!=null) { prst.close(); }
 		if(st!=null) { st.close(); }
 		if(rs!=null) { rs.close(); }
@@ -159,7 +160,7 @@ public class ProductosDao {
 			p.setStock(rs.getInt("stock"));
 			p.setShippingIncluded(rs.getBoolean("shippingIncluded"));
 			
-			p.setDateTimeDisabelOn(rs.getObject("disableOn",LocalDateTime.class));
+			p.setDateTimeDisabelOn(rs.getObject("disableOn",ZonedDateTime.class));
 			
 		return p;
 	}

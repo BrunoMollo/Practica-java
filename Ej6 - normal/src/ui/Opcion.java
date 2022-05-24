@@ -1,7 +1,7 @@
 package ui;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -139,7 +139,7 @@ public class Opcion {
 			
 			System.out.print("\n¿Seguro que quiere deshabilitar este producto?[S/N]: ");
 			if(sc.nextLine().equalsIgnoreCase("S")) {
-				p.setDateTimeDisabelOn(LocalDateTime.now());
+				p.setDateTimeDisabelOn(ZonedDateTime.now());
 				pDao.update(p);
 				System.out.println("\nSe modifico el registro");
 			}
@@ -180,7 +180,7 @@ public class Opcion {
 		input=sc.nextLine();
 	
 		if(input!="") { 
-			LocalDateTime dateTime = LocalDateTime.parse(input, Global.dateTimeFormatter);
+			ZonedDateTime dateTime = ZonedDateTime.parse(input, Global.dateTimeFormatter);
 			p.setDateTimeDisabelOn(dateTime);
 		}
 		
