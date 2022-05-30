@@ -1,11 +1,13 @@
 package ui;
 
 
+
 import java.util.LinkedList;
 import java.util.Scanner;
 
 import entities.*;
 import logic.Login;
+import utils.Input;
 
 public class Menu {
 	Scanner s=null;
@@ -41,7 +43,7 @@ public class Menu {
 			System.out.println(findAllBySurname());
 			break;
 		case "new":
-			
+			createPersona();
 			break;
 		case "edit":
 			
@@ -52,6 +54,37 @@ public class Menu {
 		default:
 			break;
 		}
+	}
+
+	private void createPersona() {
+		Persona p=new Persona();
+		Documento doc=new Documento();
+		
+		p.setNombre(Input.getString("Nombre: ", s));
+		p.setApellido(Input.getString("Apellido", s));
+		p.setEmail(Input.getString("Email: ", s));
+		p.setPassword(Input.getString("Psw: ", s));
+		p.setTel(Input.getString("tel: ", s));
+		p.setHabilitado(Input.getBool("Esta hablitado? [S/N]: ", s));
+		
+		doc.setTipo(Input.getString("Tipo documento: ", s));
+		doc.setNro(Input.getString("Numero de documento:", s));
+		p.setDocumento(doc);
+		
+		
+		LinkedList<Rol> roles=ctrlLogin.getAllRoles();
+		for(Rol r : roles) {
+			System.out.println(r.getId()+ "-"+ r.getDescripcion());
+		}
+		
+		int idRolElegido=Input.getIntBetween("Id del rol: ", s, roles.getFirst().getId(), roles.getLast().getId());
+		for(Rol r: roles) {
+			if(r.getId()==idRolElegido) {
+				p.addRol(r);
+			} 
+		}
+		
+		ctrlLogin.savePersona(p);
 	}
 
 	private String getCommand() {
@@ -71,15 +104,13 @@ public class Menu {
 		Persona p=new Persona();
 		
 		System.out.print("Email: ");
-		p.setEmail(s.nextLine());
-
+		p.setEmail(s.nextLine());	
+		
 		System.out.print("password: ");
 		p.setPassword(s.nextLine());
 		
 		p=ctrlLogin.validate(p);
-		
 		return p;
-		
 	}
 	
 	private Persona find() {

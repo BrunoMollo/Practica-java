@@ -109,6 +109,20 @@ public class DataPersona {
 		return p;
 	}
 	
+	public void loadRoles(Persona p) {
+	    p.getRoles().forEach((keyRol, descRol)->{
+        	try {
+				pstmt=DbConnector.getInstancia().getConn().
+						prepareStatement("insert into rol_persona(id_persona, id_rol) values(?,?)");
+				pstmt.setInt(1, p.getId()); 
+				pstmt.setInt(2, keyRol); 
+				pstmt.executeUpdate();
+			} 
+        	catch (SQLException e) {e.printStackTrace();}
+        	finally { closeResourses(); }
+        });
+	}
+	
 	public void add(Persona p) {
 		try {
 			pstmt=DbConnector.getInstancia().getConn().
@@ -126,10 +140,13 @@ public class DataPersona {
 			pstmt.setBoolean(8, p.isHabilitado());
 			pstmt.executeUpdate();
 			
-			rs=stmt.getGeneratedKeys();
+			rs=pstmt.getGeneratedKeys();
             if(rs!=null && rs.next()){
                 p.setId(rs.getInt(1));
             }	
+            
+            
+            
 		}  
 		catch (SQLException e) { e.printStackTrace(); } 
 		finally { closeResourses(); }

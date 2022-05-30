@@ -13,6 +13,14 @@ public class Persona {
 	private boolean habilitado;
 	private HashMap<Integer, Rol> roles;
 	
+	
+	public HashMap<Integer, Rol> getRoles() {
+		return roles;
+	}
+	public void setRoles(HashMap<Integer, Rol> roles) {
+		this.roles = roles;
+	}
+	
 	public int getId() {
 		return id;
 	}
