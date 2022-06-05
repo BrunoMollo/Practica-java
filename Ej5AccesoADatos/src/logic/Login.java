@@ -43,4 +43,8 @@ public class Login {
 		dp.add(p);
 		dp.loadRoles(p);
 	}
+
+	public void delete(Persona p) {
+		dp.delete(p);
+	}
 }

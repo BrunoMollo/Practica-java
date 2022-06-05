@@ -10,15 +10,19 @@ import logic.Login;
 import utils.Input;
 
 public class Menu {
-	Scanner s=null;
+	Input in=null;
 	Login ctrlLogin = new Login();
+	FormPersona form;
 
 	public void start() {
-		s = new Scanner(System.in);
+		System.out.println();
+		in=new Input(System.in);
+		form= new FormPersona(in);
 //		Persona p=login();
 //		
 //		System.out.println("Bienvenido "+p.getNombre()+" "+p.getApellido());
 //		System.out.println();
+		
 		
 		String command;
 		do {
@@ -28,7 +32,7 @@ public class Menu {
 			
 		}while(!command.equalsIgnoreCase("exit"));
 		
-		s.close();
+		in.close();
 	}
 
 	private void executeCommand(String command) {
@@ -46,43 +50,61 @@ public class Menu {
 			createPersona();
 			break;
 		case "edit":
-			
+			 updatePersona();
 			break;
 		case "delete":
-			
+			deletePersona();
 			break;
 		default:
 			break;
 		}
 	}
 
+	private void deletePersona() {
+		Persona p=form.fill("doc");
+		p=ctrlLogin.getByDocumento(p);
+		
+		if(p==null) {
+			System.out.println("Error: Persona no existe!");
+			return;
+		}
+		
+		System.out.println(p);
+		
+		if(in.getBool("Seguro que desea borrarlo? [S/N]")==true) {
+			ctrlLogin.delete(p);
+			System.out.println("Se borro el registro");
+		}
+		else {
+			System.out.println("No se borro");
+		}
+		
+	}
+
+	private void updatePersona() {
+		Persona p=form.fill("doc");
+		p=ctrlLogin.getByDocumento(p);
+		
+		if(p==null) {
+			System.out.println("Error: Persona no existe!");
+			return;
+		}
+		
+		System.out.println(p);
+		form.optionalFill(p, "nombre", "apellido", "mail", "psw", "tel", "habilitado", "doc");
+		
+		System.out.println(p);
+	}
+
 	private void createPersona() {
-		Persona p=new Persona();
-		Documento doc=new Documento();
 		
-		p.setNombre(Input.getString("Nombre: ", s));
-		p.setApellido(Input.getString("Apellido", s));
-		p.setEmail(Input.getString("Email: ", s));
-		p.setPassword(Input.getString("Psw: ", s));
-		p.setTel(Input.getString("tel: ", s));
-		p.setHabilitado(Input.getBool("Esta hablitado? [S/N]: ", s));
-		
-		doc.setTipo(Input.getString("Tipo documento: ", s));
-		doc.setNro(Input.getString("Numero de documento:", s));
-		p.setDocumento(doc);
-		
-		
+		Persona p=form.fill("nombre", "apellido", "mail", "psw", "tel", "habilitado", "doc");
+	
 		LinkedList<Rol> roles=ctrlLogin.getAllRoles();
 		for(Rol r : roles) {
 			System.out.println(r.getId()+ "-"+ r.getDescripcion());
 		}
-		
-		int idRolElegido=Input.getIntBetween("Id del rol: ", s, roles.getFirst().getId(), roles.getLast().getId());
-		for(Rol r: roles) {
-			if(r.getId()==idRolElegido) {
-				p.addRol(r);
-			} 
-		}
+		form.selectRol(p, roles);
 		
 		ctrlLogin.savePersona(p);
 	}
@@ -96,43 +118,22 @@ public class Menu {
 		System.out.println("edit\t\tbusca por tipo y nro de documento y actualiza todos los datos");
 		System.out.println("delete\t\tborra por tipo y nro de documento");
 		System.out.println();
-		System.out.print("comando: ");
-		return s.nextLine();
+		return in.getString("comando: ");
 	}
 	
 	public Persona login() {
-		Persona p=new Persona();
-		
-		System.out.print("Email: ");
-		p.setEmail(s.nextLine());	
-		
-		System.out.print("password: ");
-		p.setPassword(s.nextLine());
-		
+		Persona p=form.fill("mail", "psw");
 		p=ctrlLogin.validate(p);
 		return p;
 	}
 	
 	private Persona find() {
-		System.out.println();
-		Persona p=new Persona();
-		Documento d=new Documento();
-		p.setDocumento(d);
-		System.out.print("Tipo doc: ");
-		d.setTipo(s.nextLine());
-
-		System.out.print("Nro doc: ");
-		d.setNro(s.nextLine());
-		
+		Persona p=form.fill("doc");
 		return ctrlLogin.getByDocumento(p);
 	}
 	
 	private LinkedList<Persona> findAllBySurname(){
-		Persona p=new Persona();
-		
-		System.out.println("Apellido: ");
-		p.setApellido(s.nextLine());
-		
+		Persona p=form.fill("apellido");
 		return ctrlLogin.getAllBySurname(p);
 	}
 

@@ -90,7 +90,7 @@ CREATE TABLE `rol_persona` (
   `id_rol` int(11) NOT NULL,
   PRIMARY KEY (`id_persona`,`id_rol`),
   KEY `rol_persona_rol_fk` (`id_rol`),
-  CONSTRAINT `rol_persona_persona_fk` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id`),
+  CONSTRAINT `rol_persona_persona_fk` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id`) ON DELETE CASCADE ,
   CONSTRAINT `rol_persona_rol_fk` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

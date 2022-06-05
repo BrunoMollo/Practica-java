@@ -9,7 +9,7 @@ public class DataPersona {
 	
 	private DataRol dr=new DataRol();
 	private Statement stmt=null;
-	PreparedStatement pstmt=null;
+	private PreparedStatement pstmt=null;
 	private ResultSet rs=null;
 	
 	private Persona mapPersonaFromRs() throws SQLException {
@@ -123,6 +123,7 @@ public class DataPersona {
         });
 	}
 	
+	
 	public void add(Persona p) {
 		try {
 			pstmt=DbConnector.getInstancia().getConn().
@@ -144,14 +145,13 @@ public class DataPersona {
             if(rs!=null && rs.next()){
                 p.setId(rs.getInt(1));
             }	
-            
-            
-            
+               
 		}  
 		catch (SQLException e) { e.printStackTrace(); } 
 		finally { closeResourses(); }
     }
 
+	
 	public LinkedList<Persona> getAllBySurname(Persona p) {
 		LinkedList<Persona> arr= new LinkedList<Persona>();
 		try {
@@ -169,8 +169,22 @@ public class DataPersona {
 		catch (SQLException e) { e.printStackTrace(); } 
 		finally { closeResourses(); }
 
-		
 		return arr;
+	}
+
+	
+	public void delete(Persona p) {
+		try {
+			pstmt=DbConnector.getInstancia().getConn().prepareStatement(
+					"delete from persona where tipo_doc=? and nro_doc=?");
+			
+			pstmt.setString(1, p.getDocumento().getTipo());
+			pstmt.setString(2, p.getDocumento().getNro());
+			
+			pstmt.executeUpdate();
+		}
+		catch (SQLException e) { e.printStackTrace(); } 
+		finally { closeResourses(); }
 	}
 
 	

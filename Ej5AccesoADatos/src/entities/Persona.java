@@ -86,6 +86,7 @@ public class Persona {
 		return this.roles.containsKey(rolToCheck.getId());
 	}
 	
+	
 	@Override
 	public String toString() {
 		return "\nPersona [id=" + id + ", documento=" + documento + ", nombre=" + nombre + ", apellido=" + apellido
