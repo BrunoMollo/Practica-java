@@ -60,6 +60,7 @@ public class Menu {
 		}
 	}
 
+	
 	private void deletePersona() {
 		Persona p=form.fill("doc");
 		p=ctrlLogin.getByDocumento(p);

@@ -174,16 +174,29 @@ public class DataPersona {
 
 	
 	public void delete(Persona p) {
+		Connection con=DbConnector.getInstancia().getConn();
+		
 		try {
-			pstmt=DbConnector.getInstancia().getConn().prepareStatement(
-					"delete from persona where tipo_doc=? and nro_doc=?");
+			con.setAutoCommit(false);
 			
+			pstmt=con.prepareStatement(
+					"delete from rol_persona where id_persona=?");
+			pstmt.setInt(1, p.getId());
+			pstmt.executeUpdate();
+			
+			pstmt=con.prepareStatement(
+					"delete from persona where tipo_doc=? and nro_doc=?");
 			pstmt.setString(1, p.getDocumento().getTipo());
 			pstmt.setString(2, p.getDocumento().getNro());
-			
 			pstmt.executeUpdate();
+			
+			con.commit();
 		}
-		catch (SQLException e) { e.printStackTrace(); } 
+		catch (SQLException e) { 
+			e.printStackTrace(); 
+			try { con.rollback(); } 
+			catch (SQLException e1) { e1.printStackTrace(); }
+			} 
 		finally { closeResourses(); }
 	}
 
