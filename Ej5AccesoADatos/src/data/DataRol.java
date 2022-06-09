@@ -1,11 +1,14 @@
 package data;
 
+import java.security.KeyStore.Entry;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import entities.*;
+import java.util.Map;
 
 public class DataRol {
 	
@@ -101,6 +104,52 @@ public class DataRol {
 		}
 		
 		return r;
+	}
+	
+	public void LoadRoles(Persona per) {
+		Connection con=DbConnector.getInstancia().getConn();
+		
+		try {
+			con.setAutoCommit(false);
+			
+			for(Map.Entry<Integer, Rol> entry: per.getRoles().entrySet()) {
+				PreparedStatement pstmt=con.prepareStatement("insert into rol_persona(id_persona, id_rol) values(?,?)");
+				pstmt.setInt(1, per.getId()); 
+				pstmt.setInt(2, entry.getValue().getId()); 
+				pstmt.executeUpdate();
+			}
+			
+			con.commit();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DbConnector.getInstancia().tryRollback();
+		}
+		finally { DbConnector.getInstancia().releaseConn(); }
+		
+		
+	}
+	
+	public void clearRoles(Persona per) {
+		PreparedStatement stmt=null;
+		try {
+			stmt=DbConnector.getInstancia().getConn().prepareStatement(
+					"delete from rol_persona where id_persona=?" );
+			stmt.setInt(1, per.getId());
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				
+				if(stmt!=null) {stmt.close();}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setRoles(Persona per) {

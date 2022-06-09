@@ -49,12 +49,17 @@ public class FormPersona {
 
 	
 	public Persona selectRol(Persona p, LinkedList<Rol> roles) {
-			int idRolElegido=in.getIntBetween("Id del rol: ", roles.getFirst().getId(), roles.getLast().getId());
-			for(Rol r: roles) {
-				if(r.getId()==idRolElegido) {
-					p.addRol(r);
-				} 
-			}
+			int idRolElegido;
+			do {
+				idRolElegido=in.getIntBetween("Id del rol [Salir-> 0 ]: ", 0, roles.getLast().getId());
+				for(Rol r: roles) {
+					if(r.getId()==idRolElegido) {
+						p.addRol(r);
+					} 
+				}
+			} while (idRolElegido!=0);
+		
+			
 			return p;
 	}
 	

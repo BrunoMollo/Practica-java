@@ -41,10 +41,14 @@ public class Login {
 
 	public void savePersona(Persona p) {
 		dp.add(p);
-		dp.loadRoles(p);
+		dr.LoadRoles(p);
 	}
 
 	public void delete(Persona p) {
 		dp.delete(p);
+	}
+	
+	public void update(Persona p) {
+		dp.update(p);
 	}
 }

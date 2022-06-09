@@ -108,20 +108,7 @@ public class DataPersona {
 		
 		return p;
 	}
-	
-	public void loadRoles(Persona p) {
-	    p.getRoles().forEach((keyRol, descRol)->{
-        	try {
-				pstmt=DbConnector.getInstancia().getConn().
-						prepareStatement("insert into rol_persona(id_persona, id_rol) values(?,?)");
-				pstmt.setInt(1, p.getId()); 
-				pstmt.setInt(2, keyRol); 
-				pstmt.executeUpdate();
-			} 
-        	catch (SQLException e) {e.printStackTrace();}
-        	finally { closeResourses(); }
-        });
-	}
+
 	
 	
 	public void add(Persona p) {
@@ -194,8 +181,55 @@ public class DataPersona {
 		}
 		catch (SQLException e) { 
 			e.printStackTrace(); 
-			try { con.rollback(); } 
+			try { if(con!=null) { con.rollback(); } } 
 			catch (SQLException e1) { e1.printStackTrace(); }
+			} 
+		finally { closeResourses(); }
+	}
+
+	public void update(Persona p) {
+		Connection con=DbConnector.getInstancia().getConn();
+		try {
+			con.setAutoCommit(false);
+			
+			//Modifico atributos no nulos
+			pstmt=con.prepareStatement(
+					"update persona set "
+					+ "tipo_doc=?,"
+					+ "nro_doc=?,"
+					+ "nombre=?,"
+					+ "apellido=?,"
+					+ "email=?,"
+					+ "tel=?,"
+					+ "habilitado=? "
+					+ " where id=?");
+			pstmt.setString(1, p.getDocumento().getTipo());
+			pstmt.setString(2, p.getDocumento().getNro());
+			pstmt.setString(3,p.getNombre());
+			pstmt.setString(4, p.getApellido());
+			pstmt.setString(5, p.getEmail());
+			pstmt.setString(6, p.getTel());
+			pstmt.setBoolean(7,p.isHabilitado());
+			pstmt.setInt(8, p.getId());
+			pstmt.executeUpdate();
+			
+			//Modifico la psw, que puede ser nula porque no se la doy al ususario
+			if(p.getPassword()!=null) {
+				pstmt=con.prepareStatement(
+						"update persona set password=? where id=?");
+				pstmt.setString(1, p.getPassword());
+				pstmt.setInt(2, p.getId());
+				pstmt.executeUpdate();
+			}
+			
+			dr.clearRoles(p);
+			dr.LoadRoles(p);
+			
+			con.commit();
+		}
+		catch (SQLException e) { 
+			e.printStackTrace(); 
+			DbConnector.getInstancia().tryRollback();
 			} 
 		finally { closeResourses(); }
 	}

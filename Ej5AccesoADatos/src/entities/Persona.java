@@ -86,6 +86,10 @@ public class Persona {
 		return this.roles.containsKey(rolToCheck.getId());
 	}
 	
+	public void clearRoles() {
+		roles.clear();
+	}
+	
 	
 	@Override
 	public String toString() {

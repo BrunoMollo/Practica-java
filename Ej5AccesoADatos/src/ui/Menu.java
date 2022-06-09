@@ -91,10 +91,21 @@ public class Menu {
 			return;
 		}
 		
-		System.out.println(p);
 		form.optionalFill(p, "nombre", "apellido", "mail", "psw", "tel", "habilitado", "doc");
 		
+		if(in.getBool("Desea modificar los roles???[S/N]")) {
+			p.clearRoles();
+			LinkedList<Rol> roles=ctrlLogin.getAllRoles();
+			for(Rol r : roles) { System.out.println(r.getId()+ "-"+ r.getDescripcion()); }
+			form.selectRol(p, roles);
+		}
+		
 		System.out.println(p);
+		if(in.getBool("Esta seguro que quiere relaizar los cambios[S/N]")) {
+			ctrlLogin.update(p);
+		}
+		
+		
 	}
 
 	private void createPersona() {

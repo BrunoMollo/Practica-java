@@ -30,6 +30,11 @@ public class DbConnector {
 		return instancia;
 	}
 	
+	public  void tryRollback() {
+		try { if(conn!=null) { conn.rollback(); } } 
+		catch (SQLException e1) { e1.printStackTrace(); }
+	}
+	
 	public Connection getConn() {
 		try {
 			if(conn==null || conn.isClosed()) {
