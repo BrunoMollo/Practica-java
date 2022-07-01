@@ -1,16 +1,36 @@
 package ui;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Scanner;
+
+import Dao.Dao;
+import Dao.DirectDataBaseMapping;
+import Dao.ProductoDao2;
 import Dao.ProductosDao;
+import logic.Product;
+
+
+
 
 
 public class Principal6 {
+	
+	
 	
 	static Scanner sc= new Scanner(System.in);
 
 	static ProductosDao pDao;
 	
 	public static void main(String[] args) {
+		for(Field f: Product.class.getDeclaredFields()) {
+			if(f.isAnnotationPresent(DirectDataBaseMapping.class))
+			System.out.println(f.getName());
+			
+		}
+		
+		System.exit(-1);
+		
 		
 		try {pDao=new ProductosDao();}
 		catch(ClassNotFoundException ex){

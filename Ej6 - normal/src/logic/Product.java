@@ -4,16 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
+import Dao.DirectDataBaseMapping;
+import Dao.identifiable;
 import ui.Global;
 
 
-public class Product {
-	private Integer id;
-	private String name;
-	private String descripcion;
-	private Double price;
-	private Integer stock;
-	private Boolean shippingIncluded;
+public class Product implements identifiable<Integer>{
+	
+	@DirectDataBaseMapping Integer id;
+	@DirectDataBaseMapping private String name;
+	@DirectDataBaseMapping private String descripcion;
+	@DirectDataBaseMapping private Double price;
+	@DirectDataBaseMapping private Integer stock;
+	@DirectDataBaseMapping private Boolean shippingIncluded;
 	
 	private LocalDate dateDisableOn;
 	private LocalTime timeDisableOn;
@@ -116,6 +119,14 @@ public class Product {
 						+ "fecha y hora: "+dateTimeDisabelOn;	
 		
 	}
+
+
+	@Override
+	public Integer id() { return id; }
+
+
+	@Override
+	public String idFieldName() { return "id"; }
 	
 	
 }
