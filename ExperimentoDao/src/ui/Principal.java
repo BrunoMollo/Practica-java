@@ -17,10 +17,13 @@ public class Principal {
 //		}
 		
 		Persona p=new Persona();
-		p.setId(7);
-		p.setEmail("dia.molodmeqwo1gmial.com");
-		System.out.println(dp.getOneByEmail(p));
-		
+		for(Persona per: dp.FindAll()){
+			System.out.println(per);
+		}
+		System.out.println("-------------------------");
+		for(Persona per: dp.FindAllHabilitados()){
+			System.out.println(per);
+		}
 		
 		
 		

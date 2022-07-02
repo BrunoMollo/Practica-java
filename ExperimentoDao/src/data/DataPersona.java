@@ -9,6 +9,7 @@ import java.util.Map;
 
 import Dao.Dao;
 import Dao.DbConnector;
+import Dao.StatementWrapper;
 
 
 public class DataPersona extends Dao<Persona>{
@@ -29,55 +30,56 @@ public class DataPersona extends Dao<Persona>{
 		p.setTel(rs.getString("tel"));
 		p.setHabilitado(rs.getBoolean("habilitado"));
 		
-		for(Rol r: dataRol.findAllFromUser(p)) {
-			p.addRol(r);
-		}
+//		for(Rol r: dataRol.findAllFromUser(p)) {
+//			p.addRol(r);
+//		}
 		
 		return p;
 	}
 	
 	public LinkedList<Persona> FindAll(){
-		return executeFindAll(()->{
-			st= con.prepareStatement("select * from persona");
-		});
+		
+		return executeFindAll(
+			new StatementWrapper("select * from persona") 
+			);
 	}
 	
 	public LinkedList<Persona> FindAllHabilitados(){
-		return executeFindAll(()->{
-			st= con.prepareStatement("select * from persona where habilitado=?");
-			st.setBoolean(1, true);
-		});
+		return executeFindAll(
+				new StatementWrapper("select * from persona where habilitado=?") 
+					.push(true)
+		);
 	}
 
-	public Persona getOneById(Persona parameterized) {
-		return executeGetOne(()->{
-			st=con.prepareStatement("select * from persona where id=?");
-			st.setInt(1, parameterized.getId());
-		});
+	public Persona getOneById(Persona p) {
+		return executeGetOne(
+				new StatementWrapper("select * from persona where id=?")
+					.push(p.getId())
+		);
 	}
 	
-	public Persona getOneByEmail(Persona parameterized) {
-		return executeGetOne(()->{
-			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where email=?");
-			st.setString(1, parameterized.getEmail());
-		});
-	}
+//	public Persona getOneByEmail(Persona parameterized) {
+//		return executeGetOne(()->{
+//			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where email=?");
+//			st.setString(1, parameterized.getEmail());
+//		});
+//	}
 	
-	public LinkedList<Persona> getAllBySurname(Persona p) {
-		return executeFindAll(()->{
-			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where apellido=?");
-			st.setString(1, p.getApellido());
-		});
-	}
-	
-	public Persona getByDocumento(Persona per) {
-		return executeGetOne(()->{
-			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where tipo_doc=? and nro_doc=?");
-			st.setString(1, per.getDocumento().getTipo());
-			st.setString(2, per.getDocumento().getNro());
-		});
-	}
-	
+//	public LinkedList<Persona> getAllBySurname(Persona p) {
+//		return executeFindAll(()->{
+//			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where apellido=?");
+//			st.setString(1, p.getApellido());
+//		});
+//	}
+//	
+//	public Persona getByDocumento(Persona per) {
+//		return executeGetOne(()->{
+//			st=con.prepareStatement("select id,nombre,apellido,tipo_doc,nro_doc,email,tel,habilitado from persona where tipo_doc=? and nro_doc=?");
+//			st.setString(1, per.getDocumento().getTipo());
+//			st.setString(2, per.getDocumento().getNro());
+//		});
+//	}
+//	
 	public void  delete(Persona p) {
 		executeDelete(()->{
 			st=con.prepareStatement(
@@ -176,6 +178,8 @@ public class DataPersona extends Dao<Persona>{
 				st.setInt(2, entry.getValue().getId()); 
 				st.executeUpdate();
 			}
+			
+			con.commit();
 		}
 		catch (SQLException e) { 
 			e.printStackTrace(); 

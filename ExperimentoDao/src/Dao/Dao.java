@@ -45,11 +45,11 @@ public abstract class Dao<ENTITY> {
 	
 	
 	
-	public LinkedList<ENTITY> executeFindAll(queryLambda query) {
+	public LinkedList<ENTITY> executeFindAll(StatementWrapper stw) {
 		LinkedList<ENTITY> outputFound= new LinkedList<>();
 		try {
 			con=DbConnector.getInstancia().getConn();
-			query.apply();
+			st=stw.execute(con);
 			
 			rs= st.executeQuery();
 			
@@ -64,12 +64,12 @@ public abstract class Dao<ENTITY> {
 	}
 	
 
-	protected ENTITY executeGetOne(queryLambda query) {
+	protected ENTITY executeGetOne(StatementWrapper stw) {
 		ENTITY outputFound=null;
 		try {
 			con=DbConnector.getInstancia().getConn();
 			
-			query.apply();
+			st=stw.execute(con);
 		
 			rs=st.executeQuery();
 		

@@ -24,32 +24,27 @@ public class DataRol extends Dao<Rol>{
 		return r;
 	}
 	
-	public LinkedList<Rol> findAll(){
-		return executeFindAll(()->{
-			st=con.prepareStatement("select * from rol");
-		});
-	}
+
+//	public Rol getById(Rol rolToSearch) {
+//		return executeGetOne(()->{
+//			st=con.prepareStatement("select * from rol where id=?");
+//			st.setInt(1, rolToSearch.getId());
+//		});
+//	}
 	
-	public Rol getById(Rol rolToSearch) {
-		return executeGetOne(()->{
-			st=con.prepareStatement("select * from rol where id=?");
-			st.setInt(1, rolToSearch.getId());
-		});
-	}
-	
-	public Rol getByDesc(Rol rolToSearch) {
-		return executeGetOne(()->{
-			st=con.prepareStatement("select * from rol where descripcion=?");
-			st.setString(1, rolToSearch.getDescripcion());
-		});
-	}
-	
-	public LinkedList<Rol> findAllFromUser(Persona per) {
-		return executeFindAll(()->{
-			st=con.prepareStatement("select rol.* from rol inner join rol_persona on rol.id=rol_persona.id_rol where id_persona=?");
-			st.setInt(1, per.getId());
-		});
-	}
+//	public Rol getByDesc(Rol rolToSearch) {
+//		return executeGetOne(()->{
+//			st=con.prepareStatement("select * from rol where descripcion=?");
+//			st.setString(1, rolToSearch.getDescripcion());
+//		});
+//	}
+////	
+//	public LinkedList<Rol> findAllFromUser(Persona per) {
+//		return executeFindAll(()->{
+//			st=con.prepareStatement("select rol.* from rol inner join rol_persona on rol.id=rol_persona.id_rol where id_persona=?");
+//			st.setInt(1, per.getId());
+//		});
+//	}
 	
 	
 
